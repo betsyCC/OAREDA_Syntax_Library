@@ -1,0 +1,171 @@
+--IR
+
+grant select on NYSSIS_ID_DIM to ROLE_98_IR;
+alter session disable parallel query;
+
+
+
+select hist.STUDENT_ID,
+hist.TERM_ENROLLED_DATE,
+hist.COLLEGE_ID,
+hist.DEGREE_STATUS_CODE,
+hist.FULL_PART_TYPE_CODE,
+hist.CLASS_STANDING_CODE,
+hist.CLASS_DIVISION_CODE,
+hist.CLASS_LEVEL_CODE,
+hist.ETH_IMP_GROUP_1_CODE,
+hist.GENDER_CODE,
+hist.BIRTH_DATE,
+hist.AGE,
+hist.ADMISSION_TYPE_CODE,
+hist.NEW_STUDENT_CODE,
+hist.DEGREE_PURSUED_LEVEL_CODE,
+hist.GPA_CUM_PERF,
+hist.CRD_CUM_EARNED_TOTAL_PERF,
+casl.CAS_ETS_CODE,
+casl.CAS_HS_TYPE_CODE,
+casl.CAS_CAA,
+casl.CAS_HS_UNITS_TOTAL,
+casl.CAS_SAT_VER_RECNTRD,
+casl.CAS_SAT_MATH_RECNTRD,
+casl.CAS_REGENTS_ENGLISH_NEW,
+casl.CAS_REGENTS_INTEG_ALG,
+casl.CAS_REGENTS_GEOMETRY,
+casl.CAS_REGENTS_TRIGONOMETRY,
+casl.CAS_SCIENCE_ALERT_CODE,
+INIT_ALL_SKAT_PASSED_CODE,                        
+BEST_ALL_SKAT_PASSED_CODE,
+OIRA_STUDENT_ID,
+COLLEGE_NAME_DESC,  
+CIP_2010_CODE,
+CIP_2010_TITLE_SHORT
+
+
+
+from ir.HISTORY_FACTS hist
+
+
+
+inner join ir.OIRA_ID_NUMBER_DIM oira
+on hist.STUDENT_ID=oira.STUDENT_ID
+
+
+
+inner join ir.HISTORY_CAS_LIMITED_FACTS casl
+on hist.STUDENT_ID = casl.STUDENT_ID
+and hist.TERM_ENROLLED_DATE = casl.TERM_ENROLLED_DATE
+and hist.COLLEGE_ID = casl.COLLEGE_ID
+
+
+
+inner join ir.HISTORY_COURSE_PERF_FACTS hcpf
+on hist.STUDENT_ID = hcpf.STUDENT_ID
+and hist.TERM_ENROLLED_DATE = hcpf.TERM_ENROLLED_DATE
+and hist.COLLEGE_ID = hcpf.COLLEGE_ID
+
+
+
+inner join ir.HISTORY_SKAT_INITIAL_FACTS hsif
+on hist.STUDENT_ID = hsif.STUDENT_ID
+and hist.TERM_ENROLLED_DATE = hsif.TERM_ENROLLED_DATE
+and hist.COLLEGE_ID = hsif.COLLEGE_ID
+
+
+
+inner join ir.HISTORY_SKAT_BEST_FACTS hsbf
+on hist.STUDENT_ID = hsbf.STUDENT_ID
+and hist.TERM_ENROLLED_DATE = hsbf.TERM_ENROLLED_DATE
+and hist.COLLEGE_ID = hsbf.COLLEGE_ID
+
+
+
+inner join ir.HISTORY_MAJOR_FACTS hmf1
+on hist.STUDENT_ID = hmf1.STUDENT_ID
+and hist.TERM_ENROLLED_DATE = hmf1.TERM_ENROLLED_DATE
+and hist.COLLEGE_ID = hmf1.COLLEGE_ID
+and hmf1.OCCURRENCE_OF_MAJOR=1
+
+
+
+inner join ir.CIP_LOOKUP_MV cipl
+on hmf1.COLLEGE_ID = cipl.COLLEGE_ID
+and hmf1.NYSED_PROGRAM_CODE = cipl.NYSED_PROGRAM_CODE
+and hmf1.NYSED_AWARD_1_CODE = cipl.NYSED_AWARD_CODE  
+
+
+
+inner join ir.COLLEGE_LOOKUP coll
+on degf.COLLEGE_ID = coll.COLLEGE_ID
+
+
+
+left outer join ir.HISTORY_COURSE_PERF_FACTS hcpf
+on hist.STUDENT_ID=hcpf.STUDENT_ID
+and hist.TERM_ENROLLED_DATE=hcpf.TERM_ENROLLED_DATE   
+and hist.COLLEGE_ID=hcpf.COLLEGE_ID
+and hcpf.BASIC_SKILLS_AREA_CODE in ('1','2','3')
+and hcpf.BASIC_SKILLS_LAST_IN_SEQ_FLAG='Y'
+and (hcpf.BASIC_SKILLS_USIP_FLAG='N' or hcpf.BASIC_SKILLS_USIP_FLAG is null)
+
+
+
+left outer join ir.WC_IRA_TERM_FA_AWD_DISB_HST_F faid
+on IR_STUDENT_ID = hist.STUDENT_ID
+and IR_COLLEGE_ID = hist.COLLEGE_ID
+and IR_TERM_DATE = hist.TERM_ENROLLED_DATE
+
+
+
+left outer join irdb_dw.WC_IRA_OUTCOMES_HST_D
+on IR_STUDENT_ID = hist.STUDENT_ID
+and IR_UDFS_COLLEGE_ID = hist.COLLEGE_ID
+and IR_UDFS_IPEDS_OM_COHORT_CODE not in ('9')
+and IR_UDFS_HEADCOUNT_HST_CODE='1'
+and IR_UDFS_TERM_DATE=TERM_ENROLLED_DATE
+
+
+
+inner join ir.ADDRESS_DIM addr
+on idnd.STUDENT_ID = addr.STUDENT_ID
+
+
+
+inner join ir.DEGREE_FACTS degf
+on idnd.STUDENT_ID = degf.STUDENT_ID
+
+
+
+inner join ir.DEGREE_MAJOR_FACTS dmf1
+on degf.STUDENT_ID = dmf1.STUDENT_ID
+and degf.TERM_GRADUATED_DATE = dmf1.TERM_GRADUATED_DATE  
+and degf.COLLEGE_ID = dmf1.COLLEGE_ID
+and degf.OCCURRENCE_OF_DEGREE = dmf1.OCCURRENCE_OF_DEGREE  
+and degf.HEADCOUNT=1
+
+
+
+inner join ir.CIP_LOOKUP_MV cipl
+on dmf1.COLLEGE_ID = cipl.COLLEGE_ID
+and dmf1.NYSED_PROGRAM_CODE = cipl.NYSED_PROGRAM_CODE
+and dmf1.NYSED_AWARD_CODE = cipl.NYSED_AWARD_CODE  
+
+
+
+inner join ir.COLLEGE_LOOKUP coll
+on degf.COLLEGE_ID = coll.COLLEGE_ID
+
+
+
+inner join ir.OIRA_ID_NUMBER_DIM oira
+on hist.STUDENT_ID=oira.STUDENT_ID
+
+
+
+
+where hist.TERM_ENROLLED_DATE in ('01-sep-2015')
+and hist.HEADCOUNT=1
+and hist.NEW_STUDENT_CODE='1'
+and hist.FULL_PART_TYPE_CODE='1'  
+and hist.DEGREE_PURSUED_LEVEL_CODE='2'
+
+;

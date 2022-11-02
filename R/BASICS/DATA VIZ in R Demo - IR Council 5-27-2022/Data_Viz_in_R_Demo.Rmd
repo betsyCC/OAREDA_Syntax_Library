@@ -1,0 +1,356 @@
+---
+title: "Data Viz in R Demo for IR Council Meeting"
+author: "Betsy Rosalen (OAREDA) and Andrew Wallace (Hunter)"
+date: "May 27, 2022"
+output:
+    html_document:
+        theme: cerulean
+        code_folding: hide
+        df_print: paged
+        toc: true
+        toc_depth: 3
+        toc_float:
+            collapsed: false
+            smooth_scroll: true
+        css: ./style.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(ggplot2)
+```
+
+# RStudio and RMarkdown Basics
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. 
+
+To format level 1-6 headers all you do is include 1-6 hash tags (#) before a line of text like this:
+
+```
+# Level 1 Header
+## Level 2 Header
+### Level 3 Header
+#### Level 4 Header
+##### Level 5 Header
+###### Level 6 Header
+```
+
+The output will look like this:
+
+# Level 1 Header
+## Level 2 Header
+### Level 3 Header
+#### Level 4 Header
+##### Level 5 Header
+###### Level 6 Header
+
+You can also use RMarkdown to format:
+
+###### Bulleted lists:
+
+- bullet 1
+- bullet 2
+- bullet 3
+
+--------------
+
+###### Ordered lists:
+
+1. list item 1
+2. list item 2
+3. list item 3
+
+--------------
+
+###### Add links:
+
+[This is a link to cuny.edu](https://www.cuny.edu/)
+
+--------------
+
+###### Or to embed pictures (including alt text for accessibility):
+
+![This is a picture of my INCREDIBLY CUTE cat named Mouse!](Mouse_10-10-2021.png){width=350px} 
+
+--------------
+
+For more details on using R Markdown see <http://rmarkdown.rstudio.com>, or in RStudio go to _**Help > Cheatsheets > R Markdown Cheat Sheet**_ to download a pdf cheat sheet, or _**Help > Markdown Quick Reference**_ to open the _**Markdown Quick Reference**_ in your _**Help**_ pane.
+
+## Knitting and Code Chunks
+
+When you click the **Knit** button a document will be generated that includes both the content and code as well as the output of any embedded R code chunks within the document. When you embed an R code chunk it looks like this:
+
+```{r CUNY_data, class.source = 'fold-show'}
+df <- readRDS("O:/!Projects/OAREDA_Syntax_Library/DATA/Data_Viz_Demo_deidentified_DATA.rds")
+df$ YEAR_ENROLLED <- as.integer(as.character(df$YEAR_ENROLLED))
+summary(df)
+```
+
+## Including Plots
+
+You can also embed plots, for example this is a plot using only the base R `plot` function:
+
+```{r echo=FALSE}
+plot_data <- df %>%
+  filter(TERM_ENROLLED_DATE == as.POSIXct("2021-09-01"),
+         COLLEGE_NAME_SHORT == 'College6',
+         FULL_PART_TYPE_DESC == 'FULL-TIME',
+         NEW_STUDENT_CODE == '1')
+plot(plot_data$GPA_CUM_PERF, plot_data$CRD_CUM_EARNED_TOTAL_PERF)
+```
+
+Of course, this is not a very pretty or useful plot, but we will get to that later...
+
+## Hiding Code Chunks
+
+Note that the `echo = FALSE` parameter was added to the code chunk that produced the plot above to prevent printing of the R code that generated the plot like this:  
+
+```
+\```{r echo=FALSE}
+plot_data <- df %>%
+  filter(TERM_ENROLLED_DATE == as.POSIXct("2021-09-01"))
+plot(plot_data$GPA_CUM_PERF, plot_data$CRD_CUM_EARNED_TOTAL_PERF)
+\```
+```
+
+This makes it easy to create beautifully formatted documents that include charts and graphs and tables of information from your data without having to show the code needed to create those graphics.
+
+## YAML Header
+
+You can also add `code_folding: hide` to the YAML header to hide code chunks by default, but still allow users to show the code if they want to by clicking a button, like this:
+
+```{r}
+plot(plot_data$ETH_IMP_GROUP_2_DESC)
+```
+
+Here's what the YAML header at the top of this document (that includes code-folding and creates a table of contents) looks like:
+
+```
+---
+title: "Data Viz in R Demo for IR Council Meeting"
+author: "Betsy Rosalen (OAREDA) and Andrew Wallace (Hunter)"
+date: "May 27, 2022"
+output:
+    html_document:
+        theme: cerulean
+        code_folding: hide
+        df_print: paged
+        toc: true
+        toc_depth: 3
+        toc_float:
+            collapsed: false
+            smooth_scroll: true
+        css: ./style.css
+---
+```
+
+# Data Viz with ggplot2
+
+[`ggplot2`](https://ggplot2.tidyverse.org/) is part of the [tidyverse](https://www.tidyverse.org/) set of packages that were created by [Hadley Wickham](https://hadley.nz/) to make data science in R and RStudio easier and more productive and to make it easier to produce higher quality graphics than can be made with the base R functions.  
+
+The easiest way to get ggplot2 is to install the whole tidyverse:
+
+`install.packages("tidyverse")`
+
+But, you can install just ggplot2 if you really want to:
+
+`install.packages("ggplot2")`
+
+After installation all you need to do is make sure you load `ggplot2` or the `tidyverse` in a code chunk at the beginning of every RMarkdown document to load the packages for use like this:
+
+`library(ggplot2)`
+`library(tidyverse)`
+
+##### Here are the same two plots using ggplot2 without any additional styling:
+
+```{r}
+ggplot(data = plot_data, aes(x = GPA_CUM_PERF, 
+                             y = CRD_CUM_EARNED_TOTAL_PERF)) +
+  geom_point()
+
+ggplot(data = plot_data, aes(x = ETH_IMP_GROUP_2_DESC)) +
+  geom_bar() #+
+  # guides(x = guide_axis(n.dodge = 2))
+```
+
+
+##### And here are the same two plots again using ggplot2 with some very simple styling and additional dimensions added:
+
+```{r}
+ggplot(data = plot_data, aes(x = GPA_CUM_PERF, 
+                             y = CRD_CUM_EARNED_TOTAL_PERF,
+                             color = DEGREE_PURSUED_LEVEL_DESC)) +
+  geom_point(alpha = .6) + 
+  scale_color_manual(values = c("#1D3A83", "#FE8807")) +
+  labs(x = "Cumulative GPA at End of Term", 
+       y = "Cumulative Credits Earned  at End of Term",
+       title ="GPA vs Credits Earned",
+       subtitle = "Full-time, First-time Freshmen at College6 - Fall 2021") +
+  facet_grid(cols=vars(GENDER_DESC)) +
+  labs(color = "") +
+  theme_minimal() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "top")
+```
+
+```{r}
+ggplot(data = plot_data, aes(x = ETH_IMP_GROUP_2_DESC, fill=GENDER_DESC)) +
+  geom_bar() + 
+  scale_fill_manual(values = c("#1D3A83", "#FE8807")) +
+  coord_flip() +
+  facet_grid(rows=vars(DEGREE_PURSUED_LEVEL_DESC)) +
+  labs(x = "Ethnicity", 
+       title ="Student Ethnicity",
+       subtitle = "Full-time, First-time Freshmen at College6 - Fall 2021") +
+  theme_minimal() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom")# +
+  #guides(x = guide_axis(n.dodge = 2))
+```
+
+
+There are lots of other chart types to choose from like:
+
+##### Density Plots
+
+```{r}
+CUNY_colors <- c("#1D3A83", "#FFB81C", "#C4D600", 
+                 "#E40046", "#59CBE8", "#FE8807")
+
+college6_df <- df %>%
+  filter(COLLEGE_NAME_SHORT == "College6",
+         SEMESTER_ENROLLED_DESC=="Fall") 
+
+# GPA Distribution by Ethnicity
+ggplot(data=college6_df, aes(x=GPA_CUM_PERF,
+                    group=ETH_IMP_GROUP_2_DESC,
+                    fill=ETH_IMP_GROUP_2_DESC)) +
+  geom_density(adjust=1.5) +
+  scale_fill_manual(values = CUNY_colors) +
+  facet_wrap(~ETH_IMP_GROUP_2_DESC) +
+  theme_minimal() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position="none",
+    panel.spacing = unit(0.1, "lines"),
+    axis.ticks.x=element_blank()) +
+  labs(title="GPA Distribution by Ethnicity",
+       x="Cumulative GPA")
+```
+
+##### Box Plots
+
+```{r}
+ggplot(data=college6_df, aes(x=GPA_CUM_PERF,
+                    y=ETH_IMP_GROUP_2_DESC,
+                    fill=ETH_IMP_GROUP_2_DESC)) +
+  geom_boxplot(adjust=1.5) +
+  scale_fill_manual(values = CUNY_colors) +
+  facet_wrap(~DEGREE_PURSUED_LEVEL_DESC) +
+  theme_minimal() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position="none",
+    panel.spacing = unit(0.1, "lines"),
+    axis.ticks.x=element_blank()) +
+  labs(title="GPA Distribution by Ethnicity",
+       x="Cumulative GPA", y="")
+```
+
+##### Histograms
+
+```{r}
+ggplot(data=college6_df, aes(x=GPA_CUM_PERF,
+                    fill=FULL_PART_TYPE_DESC)) +
+  geom_histogram(bins=15) +
+  scale_fill_manual(values = CUNY_colors) +
+  facet_wrap(~DEGREE_PURSUED_LEVEL_DESC) +
+  theme_minimal() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.spacing = unit(0.1, "lines"),
+    axis.ticks.x=element_blank()) +
+  labs(title="GPA Distribution by Degree Pursued",
+       x="Cumulative GPA", y="Count", fill="")
+```
+
+##### 100% Stacked Bar Chart...
+
+```{r}
+# Ethnicity by Year
+college6_df_agg <- college6_df %>%
+  group_by(YEAR_ENROLLED, ETH_IMP_GROUP_2_DESC) %>%
+  summarise(n = n())
+ 
+ggplot(college6_df_agg, aes(x=YEAR_ENROLLED, y =n,  
+                            fill = ETH_IMP_GROUP_2_DESC)) +
+  geom_bar(position = "fill", stat = "identity")  +
+  scale_fill_manual(values = CUNY_colors[6:1]) +
+  coord_flip() +
+  labs(fill = "",
+       x="Year",
+       title="Fall Ethnicity Enrollment Trends") +
+  theme_minimal() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position="bottom")
+```
+
+##### And if you want to get _**REALLY**_ fancy you can animate your ggplots with the `gganimate` package:
+
+```{r}
+library(gganimate)
+#install.packages("gifski")
+college6_anim <- college6_df %>%
+  filter(SEMESTER_ENROLLED_DESC=="Fall",
+         FULL_PART_TYPE_DESC == 'FULL-TIME',
+         NEW_STUDENT_CODE == '1') 
+
+ggplot(college6_anim, aes(CRD_CUM_EARNED_TOTAL_PERF,
+                        GPA_CUM_PERF, color = DEGREE_PURSUED_LEVEL_DESC)) +
+  geom_point(alpha = .6) +
+  scale_color_manual(values = CUNY_colors) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10() +
+  facet_wrap(~ETH_IMP_GROUP_2_DESC) +
+  theme_minimal() +
+  theme(axis.line = element_line(colour = "black"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom") +
+  labs(title = 'Year: {closest_state}', color="",
+       subtitle = "Full-time, First-time Freshmen at College6",
+       x = 'Cumulative Credits Earned - PERF', y = 'Cumulative GPA - PERF') +
+  transition_states(YEAR_ENROLLED, transition_length = 1, state_length = 6) +
+  enter_grow() + 
+  exit_shrink() +
+  shadow_null() +
+  ease_aes('quintic-in-out', interval = 2) 
+```
+
+```{r}
+# GPA by Ethnicity over time
+library(ggridges)
+ 
+ggplot(data=college6_df, aes(x=GPA_CUM_PERF,
+                             y=ETH_IMP_GROUP_2_DESC,
+                             fill=ETH_IMP_GROUP_2_DESC)) +
+  geom_density_ridges() +
+  scale_fill_manual(values = CUNY_colors) +
+  theme_ridges() +
+  theme(legend.position = "none") +
+  labs(title = 'Year: {closest_state}',
+       subtitle = "Full-time, First-time Freshmen at College6",
+       y = "", x = 'Cumulative GPA - PERF') +
+  transition_states(YEAR_ENROLLED)
+```
+

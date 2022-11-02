@@ -1,0 +1,75 @@
+.main-container {
+  min-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body {background-color: #ffffff;}
+
+p { font-family: "Trebuchet MS", "Gill Sans", Helvetica, sans-serif;
+    font-size: 14px;
+    padding-left: 10px;}
+
+img { padding: 15px 25px 15px 25px;}
+
+a:link {	color: #0086b3;}
+a:visited {	color: #e29900;}
+a:hover {	color: #ffbf00;}
+a:active {	color: #ffbf00;}
+
+hr {border: 1px solid #d9d9d9;}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Trebuchet MS", "Gill Sans", Helvetica, sans-serif;
+	padding: 5px 10px 5px 10px;
+    color: #2E5E80;
+}
+
+h1, h2, h3 {font-weight: bold;}
+
+h4, h5, h6 {font-weight: medium;}
+
+h1 {font-size: 26px;
+	background: #A5BCCC;}
+h2 {font-size: 24px;
+	background: #c0d0db;}
+h3 {font-size: 20px;
+	background: #dbe4ea;}
+h4 {font-size: 18px;}
+h5 {font-size: 16px;}
+h6 {font-size: 14px;}
+
+.midcenter {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+}
+
+.footer {
+    color: black; background: #E8E8E8;
+    position: fixed; top: 90%;
+    text-align:center; width:100%;
+}
+
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D";
+}
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.15em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
+}
+blockquote li {
+  font-size: 14px;
+  display: inline;
+}
