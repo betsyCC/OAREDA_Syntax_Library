@@ -29,6 +29,10 @@ col_lu <- dbGetQuery(con, "SELECT * FROM IR.COLLEGE_LOOKUP")
 source('long_SQL_query_for_testing.R')
 ret_grad <- dbGetQuery(con, long_query)
 
+# optionally convert posix dates to regular R dates 
+ret_grad <- ret_grad %>% 
+  mutate(across(lubridate::is.POSIXct, as.Date))
+
 
 dbDisconnect(con)
 rm(con)
