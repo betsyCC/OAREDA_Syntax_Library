@@ -1,3 +1,9 @@
+# Run these two lines before you load library(ROracle). 
+# This should set your timezone to match the IRDBs and should prevent the time shifting
+
+Sys.setenv(TZ = Sys.timezone())
+Sys.setenv(ORA_SDTZ = Sys.timezone())
+
 library(ROracle)
 
 # Cannot include Regex in SQL query.  Escape character \ causes error
