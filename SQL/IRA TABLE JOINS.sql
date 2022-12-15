@@ -1,6 +1,13 @@
---IRA
+----------------------------------------------
+--Join standard census file from IRDB_DW/IRA schema
+--Coder's First and Last Name
+--Date Code was written (YYYY-MM-DD)
+--Standard SQL template
+----------------------------------------------
 
-select hstd.IR_STUDENT_ID,hstd.IR_SCHOLAR_ID as EMPLID,
+select 
+hstd.IR_STUDENT_ID,
+hstd.IR_SCHOLAR_ID as EMPLID,
 oira.IR_STUDENT_ID_PERM as OIRA_STUDENT_ID,
 hstd.IR_TERM_DATE,hstd.IR_TERM_CODE,
 hstd.IR_COLLEGE_ID,hstd.IR_INSTITUTION_CODE,
@@ -32,15 +39,13 @@ inst.IR_COLLEGE_TYPE_1_DESCR
 
 
 
-from irdb_dw.WC_IRA_TERM_ENRLMT_HST_D hstd
+from irdb_dw.WC_IRA_TERM_ENRLMT_HST_F hstf
 
-
-
-inner join irdb_dw.WC_IRA_TERM_ENRLMT_HST_F hstf   --Perf/end of term credits not yet available
-on hstd.IR_STUDENT_ID=hstf.IR_STUDENT_ID  
-and hstd.IR_TERM_DATE=hstf.IR_TERM_DATE
-and hstd.IR_COLLEGE_ID=hstf.IR_COLLEGE_ID
-and hstd.IR_ACAD_CAR_CODE=hstf.IR_ACAD_CAR_CODE      
+inner join irdb_dw.WC_IRA_TERM_ENRLMT_HST_D hstd   --Perf/end of term credits not yet available
+on hstf.IR_STUDENT_ID     = hstd.IR_STUDENT_ID  
+and hstf.IR_TERM_DATE     = hstd.IR_TERM_DATE
+and hstf.IR_COLLEGE_ID    = hstd.IR_COLLEGE_ID
+and hstf.IR_ACAD_CAR_CODE = hstd.IR_ACAD_CAR_CODE      
 
 
 
