@@ -26,7 +26,7 @@ p_load(DBI, odbc, svDialogs,
        kableExtra, gt, gtsummary, scales,
        ggforce, ggdist, ggbeeswarm, gghalves, ggrepel, ggsci, ggthemes, ggtext, cowplot, plotly, ragg, Rcpp,
        unikn, extrafont, DiagrammeR,
-       usethis,
+       usethis, gitcreds,
        fs, 
        install = TRUE)
 
