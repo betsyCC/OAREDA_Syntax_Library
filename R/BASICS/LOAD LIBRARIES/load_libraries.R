@@ -22,7 +22,7 @@ p_load(DBI, odbc, svDialogs,
        tidyverse, magrittr, janitor, forcats,
        data.table, vroom, readxl, writexl, 
        lubridate, fasttime, 
-       knitr, bookdown, revealjs, 
+       knitr, bookdown, revealjs, shiny,
        kableExtra, gt, gtsummary, scales,
        ggforce, ggdist, ggbeeswarm, gghalves, ggrepel, ggsci, ggthemes, ggtext, cowplot, plotly, ragg, Rcpp,
        unikn, extrafont, DiagrammeR,
@@ -40,6 +40,7 @@ p_load(DBI, odbc, svDialogs,
 
 # p_loaded(): list loaded packages
 # p_unload(): detach package
+# p_update(): update packages (add "update = TRUE" to update or "update = FALSE" to list outdated packages)
 
 # p_lib(): list packages in user library
 # save out a list of packages to easily update packages when R is updated to a new version:
