@@ -62,10 +62,10 @@ demd.IR_NATIVE_LANG_CODE,
 demd.IR_NATIVE_LANG_DESCR,
 appd.IR_HS_CAS_SCHL_TYPE_CODE,
 appd.IR_HS_CAS_SCHL_TYPE_DESCR,
-appd.IR_CONS_HS12_CONVERT_GPA,
-appd.IR_MATR_SATN_TOTAL_ANY_SCORE,
-appd.IR_MATR_SATN_EBRW_ANY_SCORE,
-appd.IR_MATR_SATN_MATH_ANY_SCORE,
+appf.IR_CONS_HS12_CONVERT_GPA,
+appf.IR_MATR_SATN_TOTAL_ANY_SCORE,
+appf.IR_MATR_SATN_EBRW_ANY_SCORE,
+appf.IR_MATR_SATN_MATH_ANY_SCORE,
 fapd.IR_PELL_ELIGIBLE_FLG,
 fapd.IR_PARENT_MARITAL_STAT_CODE,
 fapd.IR_PARENT_MARITAL_STAT_DESCR,
@@ -181,11 +181,19 @@ and hstf.IR_COLLEGE_ID    = demd.IR_COLLEGE_ID
 and hstf.IR_ACAD_CAR_CODE = demd.IR_ACAD_CAR_CODE
 
 left outer join 
-irdb_dw.WC_IRA_ADM_APPLICANT_HST_D appd
+irdb_dw.WC_IRA_ADM_APPLICANT_HSTD appd
  on hstf.IR_STUDENT_ID    = appd.IR_STUDENT_ID  
 and hstf.IR_TERM_DATE     = appd.IR_TERM_DATE
 and hstf.IR_COLLEGE_ID    = appd.IR_COLLEGE_ID
 and hstf.IR_ACAD_CAR_CODE = appd.IR_ACAD_CAR_CODE
+
+--as an alternative, the table below can be joined as an inner join to the table above
+left outer join 
+irdb_dw.WC_IRA_ADM_FUNNEL_HST_F appf
+ on hstf.IR_STUDENT_ID    = appf.IR_STUDENT_ID  
+and hstf.IR_TERM_DATE     = appf.IR_TERM_DATE
+and hstf.IR_COLLEGE_ID    = appf.IR_COLLEGE_ID
+and hstf.IR_ACAD_CAR_CODE = appf.IR_ACAD_CAR_CODE
 
 left outer join 
 irdb_dw.WC_IRA_SKAT_INITIAL_HST_D skat  --under development
