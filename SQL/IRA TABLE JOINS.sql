@@ -167,7 +167,7 @@ irdb_dw.WC_IRA_INSTITUTION_D inst
 and hstf.IR_TERM_CODE between inst.IR_BEGIN_TERM_CODE and inst.IR_END_TERM_CODE
 
 left outer join 
-irdb_dw.WC_IRA_TERM_ETHNICITY_HST_D ethd  --underdevelopment
+irdb_dw.WC_IRA_TERM_ETHNICITY_HST_D ethd  --under development
  on hstf.IR_STUDENT_ID    = ethd.IR_STUDENT_ID  
 and hstf.IR_TERM_DATE     = ethd.IR_TERM_DATE
 and hstf.IR_COLLEGE_ID    = ethd.IR_COLLEGE_ID
