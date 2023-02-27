@@ -6,11 +6,11 @@
 
 #### [RStudio Basic Regex in R Cheat Sheet](https://github.com/rstudio/cheatsheets/blob/main/regex.pdf)
 
-#### [The "Premier" website about Regular Expressions](https://www.regular-expressions.info/)
+#### [The "Premier" Website about Regular Expressions](https://www.regular-expressions.info/)
 
 ## Regex in SQL Cheat Sheets
 
-#### []()
+#### [SQL regex Cheat Sheet](https://github.com/betsyCC/OAREDA_Syntax_Library/blob/main/Regex/regular-expressions-in%20SQL%20cheat-sheet.pdf)
 
 ## Regex Testers
 
