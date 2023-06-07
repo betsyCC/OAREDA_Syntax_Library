@@ -203,11 +203,10 @@ and hstf.IR_COLLEGE_ID    = skat.IR_COLLEGE_ID
 and hstf.IR_ACAD_CAR_CODE = skat.IR_ACAD_CAR_CODE
 
 left outer join
-irdb_dw.WC_IRA_FA_FED_AID_APP_HST_D fapd
- on hstf.IR_STUDENT_ID      = fapd.IR_STUDENT_ID
-and hstf.IR_COLLEGE_ID      = fapd.IR_COLLEGE_ID
-and hstf.IR_ACAD_CAR_CODE   = fapd.IR_ACAD_CAR_CODE
-and hstf.IR_TERM_DATE       = fapd.IR_TERM_DATE
+irdb_dw.wc_ira_fa_fed_aid_app_hst_d fapd
+on hstf.ir_student_id       = fapd.ir_student_id
+and hstf.ir_college_id      = fapd.ir_college_id
+and hstf.ir_aid_year_code   = fapd.ir_aid_year_code
 
 left outer join
 irdb_dw.WC_IRA_TERM_FA_AWD_DISB_DLY_F faid
