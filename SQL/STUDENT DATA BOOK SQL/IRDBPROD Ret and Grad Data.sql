@@ -23,7 +23,7 @@ FROM
 		-- INSTITUTION *RETENTION* NUMERATOR CALCULATIONS
 		sum(case when FA01_COLLEGE_ID=SP01_COLLEGE_ID -- make sure they are still at the same college as when they started
 			AND SP01_DEGREE_PURSUED_LEVEL_CODE <> '9'
-			AND FA01_YEAR_ENROLLED < EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,-12)) -- do not count for current academic year cohort
+			AND FA01_YEAR_ENROLLED < EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,0)) -- I marked this to 0 as I figured we want the most recent Fall enrolled term (I saw that -12 months was stipulated in the 1-year retention calc and wasn't certain why the same numbers were used). do not count for current academic year cohort
 			THEN FA01_HEADCOUNT ELSE NULL END) AS N_1SEM_INST_RET,
 		sum(case when FA01_COLLEGE_ID=FA02_COLLEGE_ID 
 			AND FA01_DEGREE_PURSUED_LEVEL_CODE > NVL(CD01_DEGREE_EARNED_LEVEL_CODE, 0) 
@@ -175,7 +175,7 @@ FROM
 		-- SYSTEM *RETENTION* NUMERATOR CALCULATIONS
 		sum(case when SP01_COLLEGE_ID IS NOT NULL -- make sure they are still at the same college as when they started
 			AND SP01_DEGREE_PURSUED_LEVEL_CODE <> '9'
-			AND FA01_YEAR_ENROLLED < EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,-12)) -- do not count for current academic year cohort
+			AND FA01_YEAR_ENROLLED < EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,0)) -- I marked this to 0 as I figured we want the most recent Fall enrolled term (I saw that -12 months was stipulated in the 1-year retention calc and wasn't certain why the same numbers were used). do not count for current academic year cohort
 			THEN FA01_HEADCOUNT ELSE NULL END) AS N_1SEM_SYS_RET,
 		sum(case when FA02_COLLEGE_ID IS NOT NULL
 			AND FA01_DEGREE_PURSUED_LEVEL_CODE > NVL(CD01_DEGREE_EARNED_LEVEL_CODE, 0)
@@ -277,7 +277,7 @@ FROM
 
 		WHERE
 		FA01_YEAR_ENROLLED >= EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,-192)) 
-		AND FA01_YEAR_ENROLLED <= EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,-24))
+		AND FA01_YEAR_ENROLLED <= EXTRACT(YEAR FROM ADD_MONTHS(SYSDATE,0)) -- I read the 24 months as excluding Fall enrollment data within the past two years (meaning Fall 2022 would be the most current available). Changed to 0 so I could get the most recent Fall term counts.
 		-- AND FA01_NEW_STUDENT_CODE = '1'
 		-- AND FA01_FULL_PART_TYPE_CODE = '1'
 		AND FA01_DEGREE_PURSUED_LEVEL_CODE IN ('2', '3')
