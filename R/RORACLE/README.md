@@ -14,9 +14,9 @@ Per StackOverflow:
 I had to set these environment variables to get R/RStudio to find my client folders...
 
 ```
-Sys.setenv(OCI_INC="C:/app/oracle/product/19.3.0/product/19.3.0/client_1/oci/include")
-Sys.setenv(OCI_LIB64="C:/app/oracle/product/19.3.0/product/19.3.0/client_1/bin")
-Sys.setenv(OCI_HOME="C:/app/oracle/product/19.3.0/product/19.3.0/client_1")
+Sys.setenv(OCI_INC="C:/app/oracle/product/19.3.0/client_1/oci/include")
+Sys.setenv(OCI_LIB64="C:/app/oracle/product/19.3.0/client_1/bin")
+Sys.setenv(OCI_HOME="C:/app/oracle/product/19.3.0/client_1")
 install.packages("ROracle")
 ```
 
