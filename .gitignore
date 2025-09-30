@@ -48,3 +48,6 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 .DS_Store
+
+# Sharepoint files
+*-IR-57-1113C*
